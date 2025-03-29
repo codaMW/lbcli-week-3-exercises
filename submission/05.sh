@@ -6,11 +6,9 @@ transaction="01000000000101c8b0928edebbec5e698d5f86d0474595d9f6a5b2e4e3772cd9d10
 
 addr="2MvLcssW49n9atmksjwg2ZCMsEMsoj3pzUP"
 amnt=0.2
-txID=$(bitcoin-cli -regtest -rpcwallet=btrustwallet decoderawtransaction $transaction | jq -r '.vin[].txid')
-vout=$(bitcoin-cli -regtest -rpcwallet=btrustwallet decoderawtransaction $transaction | jq '.vin[].vout')
+txID=$(bitcoin-cli -regtest -rpcwallet=btrustwallet decoderawtransaction $transaction | jq -r '.vin[0].txid')
+vout=$(bitcoin-cli -regtest -rpcwallet=btrustwallet decoderawtransaction $transaction | jq '.vin[0].vout')
 
-echo "$txID"
-echo "$vout"
 
 psbt=$(bitcoin-cli -regtest -rpcwallet=btrustwallet createpsbt "[{\"txid\": \"$txID\", \"vout\": $vout}]" "{\"$addr\": $amnt}")
 
