@@ -18,5 +18,5 @@ pubKey4=$(echo $decoded_transaction | jq -r '.vin[3].txinwitness[-1]')
 #echo "key3: $pubKey3"
 #echo "key4: $pubKey4"
 
-bitcoin-cli -regtest -rpcwallet=btrustwallet createmultisig 1 '["'$pubKey1'","'$pubKey2'","'$pubKey3'","'$pubKey4'"]' "p2sh-segwit" | jq -r '.address'
+bitcoin-cli -regtest -rpcwallet=btrustwallet createmultisig 1 '["'$pubKey1'","'$pubKey2'","'$pubKey3'","'$pubKey4'"]' | jq -r '.address'
 
