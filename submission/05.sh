@@ -6,11 +6,14 @@ transaction="01000000000101c8b0928edebbec5e698d5f86d0474595d9f6a5b2e4e3772cd9d10
 
 addr="2MvLcssW49n9atmksjwg2ZCMsEMsoj3pzUP"
 amnt=0.2
-txID=$(bitcoin-cli -regtest -rpcwallet=btrustwallet decoderawtransaction $transaction | jq -r '.vin[0].txid')
-vout=$(bitcoin-cli -regtest -rpcwallet=btrustwallet decoderawtransaction $transaction | jq '.vin[0].vout')
 
+txID=$(bitcoin-cli -regtest -rpcwallet=btrustwallet decoderawtransaction "$transaction" | jq -r '.vin[0].txid')
+utxo_vout_1=$(bitcoin-cli -regtest decoderawtransaction "$transaction" | jq -r '.vout | .[0] | .n // .vout')
+utxo_vout_1_value=$(bitcoin-cli -regtest decoderawtransaction "$transaction" | jq -r '.vout | .[0] | .value')
+utxo_vout_2=$(bitcoin-cli -regtest decoderawtransaction "$transaction" | jq -r '.vout | .[1] | .n // .vout')
+utxo_vout_2_value=$(bitcoin-cli -regtest decoderawtransaction "$transaction" | jq -r '.vout | .[1] | .value')
 
-psbt=$(bitcoin-cli -regtest -rpcwallet=btrustwallet createpsbt "[{\"txid\": \"$txID\", \"vout\": $vout}]" "{\"$addr\": $amnt}")
+psbt=$(bitcoin-cli -regtest -rpcwallet=btrustwallet createpsbt "[{ \"txid\": \"$txID\", \"vout\": $utxo_vout_1 }, { \"txid\": \"$txID\", \"vout\": $utxo_vout_2 }]" "{ \"$addr\": $amnt }")
 
 echo "$psbt"
 
